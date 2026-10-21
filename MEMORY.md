@@ -6,17 +6,19 @@ Si este archivo contradice el código o la base, la verdad es el código y la ba
 
 ## Estado
 
-- Tablas de la base de datos (Terminado, 2026/09/17)
-- RLS de las tablas (Terminado, 2026/09/21)
+Ultima revision: 2026/10/17
+Fecha limite de entrega: 2026/11/23
+
+- Tablas de la base de datos (Terminado)
+- RLS de las tablas (Terminado)
 - Tipos regenerados: Terminado
-- Auth(A medias, 2026/10/18): Creado, faltan variables `EXPO_PUBLIC`, un listener de `AppState`, login, rutas protegidas y logout, no tocar
-- supabase.ts(Ajustes pendientes, 2026/09/24)
+- Auth (A medias): Creado, falta login, `onAuthStateChange`,rutas protegidas, logout, esto lo escribo yo porque me interesa entender como funciona la sesión antes de delegar, yo mismo marco cuando haya finalizado
+- `supabase.ts` (a medias): faltan variables, `AppState`, quitar el `as any`
 
 ## Decisiones
 
 - DEFAULT auth.uid() en id_entrenador: así ningún INSERT lo manda a mano. Razón: RLS ya valida igual
-- ejercicios como catálogo híbrido: la tabla necesita contener simultáneamente filas que son catálogo compartido (visibles para todos) y filas que son propiedad de un entrenador específico (visibles solo para él).
-- Auth lo escribo yo: Auth está a medias, lo quiero finalizar yo
+- `ejercicios` como catálogo híbrido: Los entrenadores pueden elegir entre una lista de ejercicios pero tambien pueden crear ejercicios personalizados, asi son libres de personalizar al completo su rutina
 
 ## Pendientes y orden
 
