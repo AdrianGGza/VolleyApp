@@ -34,7 +34,7 @@ App Mobile creada para que un entrenador de voleibol pueda gestionar a sus equip
 - 🚫 Nunca: Modificar una policy RLS o una tabla para "hacer que funcione", solo proponerlas
 - 🚫 Nunca: Instalar una dependencia sin avisarme
 - 🚫 Nunca: Poner una llave de supabase en el código a excepción de la URL y la llave publica (anon), que van en variables de entorno (En expo, las publicas empiezan con `EXPO_PUBLIC_`)
-- 🚫 Nunca: Hardcodear llaves, `service_role` no debe de aparecer jamás; `.env` no se sube a la repo
+- 🚫 Nunca: Hardcodear llaves, `service_role` no debe de aparecer jamás; `.env.local` no se sube a la repo
 - 🚫 Nunca: Editar `database.types.ts` a mano en vez de regenerarlo, se encuentra en `src/types/database.types.ts`
 - ⚠️ Preguntar antes: Modificar sesión y rutas protegidas
 - ✅ Siempre: Actualizar la memoria `MEMORY.md` al cerrar una feature o una decisión

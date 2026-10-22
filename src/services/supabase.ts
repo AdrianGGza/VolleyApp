@@ -2,10 +2,12 @@ import asyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 import { AppState } from "react-native";
 
-const supabaseUrl = "https://clnmsoxaarpxcnqhqvrq.supabase.co";
-const supabaseAnonKey = "sb_publishable_t04BtcVyrFKZNNPkujxBdw_wThj6zC0";
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_KEY;
 
-
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error("Faltan las variables EXPO_PUBLIC_SUPABASE_* en .env.local");
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -15,3 +17,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: false,
   },
 });
+
+const appStateSubscription = AppState.addEventListener(
+  "change",
+  (nextAppState) => {
+    if (nextAppState === "active") {
+      supabase.auth.startAutoRefresh();
+    } else {
+      supabase.auth.stopAutoRefresh();
+    }
+  },
+);
