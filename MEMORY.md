@@ -13,7 +13,7 @@ Fecha limite de entrega: 2026/11/23
 - RLS de las tablas (Terminado)
 - Tipos regenerados: Terminado
 - Auth (A medias): Creado, falta login, `onAuthStateChange`,rutas protegidas, logout, esto lo escribo yo porque me interesa entender como funciona la sesión antes de delegar, yo mismo marco cuando haya finalizado
-- `supabase.ts` (a medias): faltan variables, `AppState`, quitar el `as any`
+- `supabase.ts` (Terminados):las variables se encuentran en `.env.local`
 
 ## Decisiones
 
