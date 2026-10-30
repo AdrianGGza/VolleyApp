@@ -55,6 +55,7 @@ App Mobile creada para que un entrenador de voleibol pueda gestionar a sus equip
 - `asignaciones_rutina` tiene dos padres, `jugadores` y `rutinas`, ambos del entrenador
 - Para cumplir un `INSERT` en las tablas hijas, la fila debe apuntar a un padre que sea del entrenador logueado
 - `posiciones` es solo lectura, no hagas `INSERT`: truena con error de RLS. Un `UPDATE` o `DELETE` no cambia nada y regresa 0 filas, sin error
+- Dependencias: antes de ejecutar npm install o npx expo install de cualquier paquete, detente, dime el nombre y la razón, y espera mi respuesta. No instales nada aunque sea una dependencia de prueba.
 
 ## Verificación
 

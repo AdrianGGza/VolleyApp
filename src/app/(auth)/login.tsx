@@ -1,5 +1,6 @@
 import { supabase } from "@/services/supabase";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
+import type { TextInput as TextInputInstance } from "react-native";
 import {
   ActivityIndicator,
   Keyboard,
@@ -55,7 +56,7 @@ export default function LoginScreen() {
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
   // Referencia para pasar el foco del correo a la contraseña con el teclado
-  const contrasenaInputRef = useRef<TextInput>(null);
+  const contrasenaInputRef = useRef<TextInputInstance>(null);
 
   const iniciarSesion = async () => {
     Keyboard.dismiss();
@@ -78,12 +79,12 @@ export default function LoginScreen() {
 
       if (error) {
         setMensajeError(
-          "Credenciales incorrectas. Revisa tu correo y contraseña e intenta de nuevo."
+          "Credenciales incorrectas. Revisa tu correo y contraseña e intenta de nuevo.",
         );
       }
     } catch {
       setMensajeError(
-        "No se pudo conectar con el servidor. Verifica tu conexión a internet."
+        "No se pudo conectar con el servidor. Verifica tu conexión a internet.",
       );
     } finally {
       setCargando(false);
@@ -147,10 +148,7 @@ export default function LoginScreen() {
 
               {/* Separador sutil estilo iOS */}
               <View
-                style={[
-                  styles.separator,
-                  { backgroundColor: theme.separator },
-                ]}
+                style={[styles.separator, { backgroundColor: theme.separator }]}
               />
 
               {/* Campo: Contraseña */}
