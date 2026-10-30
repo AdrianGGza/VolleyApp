@@ -1,6 +1,6 @@
 import { supabase } from "@/services/supabase";
 import { useRef, useState } from "react";
-import type { TextInput as TextInputInstance } from "react-native";
+import type { TextInputInstance } from "react-native";
 import {
   ActivityIndicator,
   Keyboard,
