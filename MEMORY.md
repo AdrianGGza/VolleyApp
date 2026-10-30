@@ -6,13 +6,13 @@ Si este archivo contradice el código o la base, la verdad es el código y la ba
 
 ## Estado
 
-Ultima revision: 2026/10/17
+Ultima revision: 2026/10/30
 Fecha limite de entrega: 2026/11/23
 
 - Tablas de la base de datos (Terminado)
 - RLS de las tablas (Terminado)
 - Tipos regenerados: Terminado
-- Auth (A medias): Creado, falta login, `onAuthStateChange`,rutas protegidas, logout, esto lo escribo yo porque me interesa entender como funciona la sesión antes de delegar, yo mismo marco cuando haya finalizado
+- Auth (A medias): Creado (`login.tsx` listo con diseño Apple HIG), falta `onAuthStateChange`, rutas protegidas, logout, esto lo escribo yo porque me interesa entender como funciona la sesión antes de delegar, yo mismo marco cuando haya finalizado
 - `supabase.ts` (Terminados):las variables se encuentran en `.env.local`
 
 ## Decisiones

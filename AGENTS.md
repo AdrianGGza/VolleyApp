@@ -28,6 +28,7 @@ App Mobile creada para que un entrenador de voleibol pueda gestionar a sus equip
 - Cambios pequeños y enfocados; no reescribas lo que ya funciona.
 - Al terminar, resume qué has cambiado y cualquier decisión que deba revisar.
 - Explica por qué, no solo que
+- Usa skill si hace falta
 
 ## Límites
 
