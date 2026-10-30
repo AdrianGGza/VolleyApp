@@ -1,0 +1,65 @@
+[33mcommit 29f1b249e649dcf1d10369aa21754b9eb91cb1b2[m[33m ([m[1;32mmain[m[33m)[m
+Author: AdrianGGza <adriangalvan.dev@gmail.com>
+Date:   Fri Oct 30 15:30:13 2026 -0600
+
+    Arreglo de versiones
+
+[1mdiff --git a/package.json b/package.json[m
+[1mindex 129b9e0..30f7a3b 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -3,31 +3,31 @@[m
+   "main": "expo-router/entry",[m
+   "version": "1.0.0",[m
+   "dependencies": {[m
+[31m-    "@expo/ui": "~57.0.18",[m
+[32m+[m[32m    "@expo/ui": "~58.0.25",[m
+     "@react-native-async-storage/async-storage": "2.2.0",[m
+     "@supabase/supabase-js": "^2.117.1",[m
+[31m-    "expo": "~57.0.23",[m
+[31m-    "expo-constants": "~57.0.18",[m
+[31m-    "expo-device": "~57.0.2",[m
+[31m-    "expo-font": "~57.0.4",[m
+[31m-    "expo-glass-effect": "~57.0.3",[m
+[31m-    "expo-image": "~57.0.5",[m
+[31m-    "expo-linking": "~57.0.10",[m
+[31m-    "expo-router": "~57.0.21",[m
+[31m-    "expo-splash-screen": "~57.0.9",[m
+[31m-    "expo-status-bar": "~57.0.1",[m
+[31m-    "expo-symbols": "~57.0.3",[m
+[31m-    "expo-system-ui": "~57.0.4",[m
+[31m-    "expo-web-browser": "~57.0.3",[m
+[31m-    "react": "19.2.3",[m
+[31m-    "react-dom": "19.2.3",[m
+[31m-    "react-native": "0.86.3",[m
+[31m-    "react-native-gesture-handler": "~2.32.0",[m
+[31m-    "react-native-reanimated": "4.5.1",[m
+[31m-    "react-native-safe-area-context": "~5.7.0",[m
+[31m-    "react-native-screens": "~4.26.0",[m
+[31m-    "react-native-web": "~0.21.0",[m
+[31m-    "react-native-worklets": "0.10.1"[m
+[32m+[m[32m    "expo": "^58.0.21",[m
+[32m+[m[32m    "expo-constants": "~58.0.14",[m
+[32m+[m[32m    "expo-device": "~58.0.5",[m
+[32m+[m[32m    "expo-font": "~58.0.11",[m
+[32m+[m[32m    "expo-glass-effect": "~58.0.5",[m
+[32m+[m[32m    "expo-image": "~58.0.18",[m
+[32m+[m[32m    "expo-linking": "~58.0.15",[m
+[32m+[m[32m    "expo-router": "~57",[m
+[32m+[m[32m    "expo-splash-screen": "~58.0.12",[m
+[32m+[m[32m    "expo-status-bar": "~58.0.4",[m
+[32m+[m[32m    "expo-symbols": "~58.0.4",[m
+[32m+[m[32m    "expo-system-ui": "~58.0.7",[m
+[32m+[m[32m    "expo-web-browser": "~58.0.7",[m
+[32m+[m[32m    "react": "19.3.0",[m
+[32m+[m[32m    "react-dom": "19.3.0",[m
+[32m+[m[32m    "react-native": "0.88.1",[m
+[32m+[m[32m    "react-native-gesture-handler": "~3.3.0",[m
+[32m+[m[32m    "react-native-reanimated": "4.7.1",[m
+[32m+[m[32m    "react-native-safe-area-context": "~5.10.1",[m
+[32m+[m[32m    "react-native-screens": "~4.30.0",[m
+[32m+[m[32m    "react-native-web": "^0.21.4",[m
+[32m+[m[32m    "react-native-worklets": "0.13.0"[m
+   },[m
+   "devDependencies": {[m
+     "@types/react": "~19.2.2",[m
