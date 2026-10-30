@@ -39,6 +39,7 @@ App Mobile creada para que un entrenador de voleibol pueda gestionar a sus equip
 - 🚫 Nunca: Editar `database.types.ts` a mano en vez de regenerarlo, se encuentra en `src/types/database.types.ts`
 - ⚠️ Preguntar antes: Modificar sesión y rutas protegidas
 - ✅ Siempre: Actualizar la memoria `MEMORY.md` al cerrar una feature o una decisión
+- 🚫 Nunca: Dependencias y SDK: nunca cambies versiones de expo, expo-\*, react-native ni react, ni corras npm install de paquetes nuevos, sin aprobación mía. Si detectas un conflicto de versiones (ERESOLVE, peer dependencies), detente, muéstrame el error y propón el comando oficial de Expo (npx expo install). No uses --force ni --legacy-peer-deps.
 
 ## Reglas de dominio y trampas
 
