@@ -10,6 +10,7 @@ import { Collapsible } from '@/components/ui/collapsible';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { supabase } from '@/services/supabase';
 
 export default function TabTwoScreen() {
   const safeAreaInsets = useSafeAreaInsets();
@@ -18,6 +19,10 @@ export default function TabTwoScreen() {
     bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
   };
   const theme = useTheme();
+
+  const cerrarSesion = async () => {
+    await supabase.auth.signOut();
+  };
 
   const contentPlatformStyle = Platform.select({
     android: {
@@ -56,6 +61,19 @@ export default function TabTwoScreen() {
               </ThemedView>
             </Pressable>
           </ExternalLink>
+
+          <Pressable
+            onPress={cerrarSesion}
+            style={({ pressed }) => [styles.logoutButton, pressed && styles.pressed]}
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar sesión">
+            <SymbolView
+              tintColor="#FF3B30"
+              name={{ ios: 'rectangle.portrait.and.arrow.right', android: 'exit_to_app', web: 'arrow_forward' }}
+              size={15}
+            />
+            <ThemedText style={styles.logoutText}>Cerrar sesión</ThemedText>
+          </Pressable>
         </ThemedView>
 
         <ThemedView style={styles.sectionsWrapper}>
@@ -157,6 +175,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.one,
     alignItems: 'center',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.two,
+    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.four,
+    borderRadius: Spacing.five,
+    backgroundColor: 'rgba(255, 59, 48, 0.1)',
+    marginTop: Spacing.two,
+  },
+  logoutText: {
+    color: '#FF3B30',
+    fontSize: 15,
+    fontWeight: '600',
   },
   sectionsWrapper: {
     gap: Spacing.five,

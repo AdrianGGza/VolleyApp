@@ -1,4 +1,5 @@
 import { supabase } from "@/services/supabase";
+import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { useRef, useState } from "react";
 import type { TextInputInstance } from "react-native";
 import {
@@ -78,14 +79,19 @@ export default function LoginScreen() {
       });
 
       if (error) {
-        setMensajeError(
-          "Credenciales incorrectas. Revisa tu correo y contraseña e intenta de nuevo.",
-        );
+        if (isAuthRetryableFetchError(error)) {
+          setMensajeError(
+            "No se pudo conectar al servidor, revisa tu conexion a internet",
+          );
+        } else {
+          setMensajeError(
+            "Credenciales incorrectas. Revisa tu correo y contraseña e intenta de nuevo.",
+          );
+        }
+        return;
       }
     } catch {
-      setMensajeError(
-        "No se pudo conectar con el servidor. Verifica tu conexión a internet.",
-      );
+      setMensajeError("Error inesperato en la app, intenta de nuevo");
     } finally {
       setCargando(false);
     }
