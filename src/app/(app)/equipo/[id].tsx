@@ -2,32 +2,29 @@ import { Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 import { obtenerEquipoPorId, type Equipo } from "@/services/equipos.services";
 import {
-    actualizarJugador,
-    crearJugador,
-    eliminarJugador,
-    obtenerJugadoresPorEquipo,
-    type JugadorConPosicion,
+  actualizarJugador,
+  crearJugador,
+  eliminarJugador,
+  obtenerJugadoresPorEquipo,
+  type JugadorConPosicion,
 } from "@/services/jugadores.services";
-import {
-    obtenerPosiciones,
-    type Posicion,
-} from "@/services/posiciones.services";
+import { obtenerPosiciones, type Posicion } from "@/services/posiciones.services";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    Pressable,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -45,12 +42,9 @@ export default function DetalleEquipoScreen() {
 
   // Estados del modal de jugador (alta / edición)
   const [modalVisible, setModalVisible] = useState(false);
-  const [jugadorEnEdicion, setJugadorEnEdicion] =
-    useState<JugadorConPosicion | null>(null);
+  const [jugadorEnEdicion, setJugadorEnEdicion] = useState<JugadorConPosicion | null>(null);
   const [nombreJugador, setNombreJugador] = useState("");
-  const [posicionSeleccionada, setPosicionSeleccionada] = useState<
-    number | null
-  >(null);
+  const [posicionSeleccionada, setPosicionSeleccionada] = useState<number | null>(null);
   const [edad, setEdad] = useState("");
   const [estatura, setEstatura] = useState("");
   const [peso, setPeso] = useState("");
@@ -106,9 +100,7 @@ export default function DetalleEquipoScreen() {
     setNombreJugador(jugador.nombre_jugador ?? "");
     setPosicionSeleccionada(jugador.id_posicion ?? null);
     setEdad(jugador.edad_jugador != null ? String(jugador.edad_jugador) : "");
-    setEstatura(
-      jugador.estatura_jugador != null ? String(jugador.estatura_jugador) : "",
-    );
+    setEstatura(jugador.estatura_jugador != null ? String(jugador.estatura_jugador) : "");
     setPeso(jugador.peso_jugador != null ? String(jugador.peso_jugador) : "");
     setErrorModal(null);
     setModalVisible(true);
@@ -132,10 +124,7 @@ export default function DetalleEquipoScreen() {
       return;
     }
 
-    if (
-      estaturaNum !== null &&
-      (Number.isNaN(estaturaNum) || estaturaNum <= 0)
-    ) {
+    if (estaturaNum !== null && (Number.isNaN(estaturaNum) || estaturaNum <= 0)) {
       setErrorModal("Ingresa una estatura válida (en cm).");
       return;
     }
@@ -150,20 +139,15 @@ export default function DetalleEquipoScreen() {
     try {
       if (jugadorEnEdicion) {
         // Actualización
-        const actualizado = await actualizarJugador(
-          jugadorEnEdicion.id_jugador,
-          {
-            nombre_jugador: nombreLimpio,
-            id_posicion: posicionSeleccionada,
-            edad_jugador: edadNum,
-            estatura_jugador: estaturaNum,
-            peso_jugador: pesoNum,
-          },
-        );
+        const actualizado = await actualizarJugador(jugadorEnEdicion.id_jugador, {
+          nombre_jugador: nombreLimpio,
+          id_posicion: posicionSeleccionada,
+          edad_jugador: edadNum,
+          estatura_jugador: estaturaNum,
+          peso_jugador: pesoNum,
+        });
 
-        const posicionObj = posiciones.find(
-          (p) => p.id_posicion === posicionSeleccionada,
-        );
+        const posicionObj = posiciones.find((p) => p.id_posicion === posicionSeleccionada);
         setJugadores((prev) =>
           prev.map((item) =>
             item.id_jugador === actualizado.id_jugador
@@ -182,9 +166,7 @@ export default function DetalleEquipoScreen() {
           peso_jugador: pesoNum,
         });
 
-        const posicionObj = posiciones.find(
-          (p) => p.id_posicion === posicionSeleccionada,
-        );
+        const posicionObj = posiciones.find((p) => p.id_posicion === posicionSeleccionada);
         setJugadores((prev) => [
           { ...nuevo, posiciones: posicionObj ?? null },
           ...prev,
@@ -228,19 +210,14 @@ export default function DetalleEquipoScreen() {
 
   if (Number.isNaN(idEquipo)) {
     return (
-      <SafeAreaView
-        style={[styles.safeArea, { backgroundColor: theme.background }]}
-      >
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
         <View style={styles.errorCentered}>
           <Text style={[styles.errorTitle, { color: theme.error }]}>
             Identificador de equipo inválido
           </Text>
           <Pressable
             onPress={() => router.back()}
-            style={[
-              styles.backActionButton,
-              { backgroundColor: theme.primary },
-            ]}
+            style={[styles.backActionButton, { backgroundColor: theme.primary }]}
           >
             <Text style={[styles.backActionText, { color: theme.primaryText }]}>
               Volver a equipos
@@ -311,22 +288,12 @@ export default function DetalleEquipoScreen() {
                     { backgroundColor: theme.backgroundElement },
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.categoryText,
-                      { color: theme.textSecondary },
-                    ]}
-                  >
+                  <Text style={[styles.categoryText, { color: theme.textSecondary }]}>
                     {equipo.categoria_equipo}
                   </Text>
                 </View>
               ) : null}
-              <Text
-                style={[
-                  styles.playerCountBadge,
-                  { color: theme.textSecondary },
-                ]}
-              >
+              <Text style={[styles.playerCountBadge, { color: theme.textSecondary }]}>
                 {jugadores.length === 1
                   ? "1 atleta registrado"
                   : `${jugadores.length} atletas registrados`}
@@ -347,17 +314,11 @@ export default function DetalleEquipoScreen() {
             accessibilityLabel="Añadir jugador"
           >
             <SymbolView
-              name={{
-                ios: "person.badge.plus",
-                android: "person_add",
-                web: "person_add",
-              }}
+              name={{ ios: "person.badge.plus", android: "person_add", web: "person_add" }}
               size={18}
               tintColor={theme.primaryText}
             />
-            <Text
-              style={[styles.primaryButtonText, { color: theme.primaryText }]}
-            >
+            <Text style={[styles.primaryButtonText, { color: theme.primaryText }]}>
               Añadir
             </Text>
           </Pressable>
@@ -401,11 +362,9 @@ export default function DetalleEquipoScreen() {
             <Text style={[styles.emptyTitle, { color: theme.text }]}>
               Sin atletas en la plantilla
             </Text>
-            <Text
-              style={[styles.emptyDescription, { color: theme.textSecondary }]}
-            >
-              Agrega a los jugadores de este equipo para asignarles su posición
-              táctica y llevar el seguimiento de sus evaluaciones y rendimiento.
+            <Text style={[styles.emptyDescription, { color: theme.textSecondary }]}>
+              Agrega a los jugadores de este equipo para asignarles su posición táctica
+              y llevar el seguimiento de sus evaluaciones y rendimiento.
             </Text>
             <Pressable
               onPress={abrirModalCrear}
@@ -417,9 +376,7 @@ export default function DetalleEquipoScreen() {
                 },
               ]}
             >
-              <Text
-                style={[styles.emptyActionText, { color: theme.primaryText }]}
-              >
+              <Text style={[styles.emptyActionText, { color: theme.primaryText }]}>
                 Añadir primer jugador
               </Text>
             </Pressable>
@@ -440,20 +397,13 @@ export default function DetalleEquipoScreen() {
               >
                 <View style={styles.playerCardTop}>
                   <View style={styles.playerAvatarBadge}>
-                    <Text
-                      style={[styles.playerAvatarText, { color: theme.accent }]}
-                    >
-                      {jugador.nombre_jugador
-                        ? jugador.nombre_jugador[0].toUpperCase()
-                        : "V"}
+                    <Text style={[styles.playerAvatarText, { color: theme.accent }]}>
+                      {jugador.nombre_jugador ? jugador.nombre_jugador[0].toUpperCase() : "V"}
                     </Text>
                   </View>
 
                   <View style={styles.playerMainInfo}>
-                    <Text
-                      style={[styles.playerName, { color: theme.text }]}
-                      numberOfLines={1}
-                    >
+                    <Text style={[styles.playerName, { color: theme.text }]} numberOfLines={1}>
                       {jugador.nombre_jugador}
                     </Text>
                     <View style={styles.positionBadgeRow}>
@@ -471,14 +421,11 @@ export default function DetalleEquipoScreen() {
                           style={[
                             styles.positionBadgeText,
                             {
-                              color: jugador.posiciones
-                                ? theme.accent
-                                : theme.textSecondary,
+                              color: jugador.posiciones ? theme.accent : theme.textSecondary,
                             },
                           ]}
                         >
-                          {jugador.posiciones?.nombre_posicion ??
-                            "Sin posición fija"}
+                          {jugador.posiciones?.nombre_posicion ?? "Sin posición fija"}
                         </Text>
                       </View>
                     </View>
@@ -512,11 +459,7 @@ export default function DetalleEquipoScreen() {
                       accessibilityLabel="Eliminar jugador"
                     >
                       <SymbolView
-                        name={{
-                          ios: "trash",
-                          android: "delete",
-                          web: "delete",
-                        }}
+                        name={{ ios: "trash", android: "delete", web: "delete" }}
                         size={17}
                         tintColor={theme.error}
                       />
@@ -528,71 +471,37 @@ export default function DetalleEquipoScreen() {
                 <View
                   style={[
                     styles.playerMetricsRow,
-                    {
-                      borderTopColor: theme.border,
-                      backgroundColor: theme.backgroundElement,
-                    },
+                    { borderTopColor: theme.border, backgroundColor: theme.backgroundElement },
                   ]}
                 >
                   <View style={styles.metricItem}>
-                    <Text
-                      style={[
-                        styles.metricLabel,
-                        { color: theme.textSecondary },
-                      ]}
-                    >
+                    <Text style={[styles.metricLabel, { color: theme.textSecondary }]}>
                       EDAD
                     </Text>
                     <Text style={[styles.metricValue, { color: theme.text }]}>
-                      {jugador.edad_jugador != null
-                        ? `${jugador.edad_jugador} años`
-                        : "—"}
+                      {jugador.edad_jugador != null ? `${jugador.edad_jugador} años` : "—"}
                     </Text>
                   </View>
 
-                  <View
-                    style={[
-                      styles.metricSeparator,
-                      { backgroundColor: theme.border },
-                    ]}
-                  />
+                  <View style={[styles.metricSeparator, { backgroundColor: theme.border }]} />
 
                   <View style={styles.metricItem}>
-                    <Text
-                      style={[
-                        styles.metricLabel,
-                        { color: theme.textSecondary },
-                      ]}
-                    >
+                    <Text style={[styles.metricLabel, { color: theme.textSecondary }]}>
                       ESTATURA
                     </Text>
                     <Text style={[styles.metricValue, { color: theme.text }]}>
-                      {jugador.estatura_jugador != null
-                        ? `${jugador.estatura_jugador} cm`
-                        : "—"}
+                      {jugador.estatura_jugador != null ? `${jugador.estatura_jugador} cm` : "—"}
                     </Text>
                   </View>
 
-                  <View
-                    style={[
-                      styles.metricSeparator,
-                      { backgroundColor: theme.border },
-                    ]}
-                  />
+                  <View style={[styles.metricSeparator, { backgroundColor: theme.border }]} />
 
                   <View style={styles.metricItem}>
-                    <Text
-                      style={[
-                        styles.metricLabel,
-                        { color: theme.textSecondary },
-                      ]}
-                    >
+                    <Text style={[styles.metricLabel, { color: theme.textSecondary }]}>
                       PESO
                     </Text>
                     <Text style={[styles.metricValue, { color: theme.text }]}>
-                      {jugador.peso_jugador != null
-                        ? `${jugador.peso_jugador} kg`
-                        : "—"}
+                      {jugador.peso_jugador != null ? `${jugador.peso_jugador} kg` : "—"}
                     </Text>
                   </View>
                 </View>
@@ -699,8 +608,7 @@ export default function DetalleEquipoScreen() {
                 </Text>
                 <View style={styles.positionsSelector}>
                   {posiciones.map((pos) => {
-                    const esSeleccionada =
-                      posicionSeleccionada === pos.id_posicion;
+                    const esSeleccionada = posicionSeleccionada === pos.id_posicion;
                     return (
                       <Pressable
                         key={pos.id_posicion}
@@ -715,9 +623,7 @@ export default function DetalleEquipoScreen() {
                             backgroundColor: esSeleccionada
                               ? theme.primary
                               : theme.backgroundElement,
-                            borderColor: esSeleccionada
-                              ? theme.primary
-                              : theme.border,
+                            borderColor: esSeleccionada ? theme.primary : theme.border,
                           },
                         ]}
                       >
@@ -725,9 +631,7 @@ export default function DetalleEquipoScreen() {
                           style={[
                             styles.positionChipText,
                             {
-                              color: esSeleccionada
-                                ? theme.primaryText
-                                : theme.text,
+                              color: esSeleccionada ? theme.primaryText : theme.text,
                               fontWeight: esSeleccionada ? "700" : "500",
                             },
                           ]}
@@ -743,9 +647,7 @@ export default function DetalleEquipoScreen() {
               {/* Fila de medidas físicas */}
               <View style={styles.metricsFormRow}>
                 <View style={[styles.formGroup, { flex: 1 }]}>
-                  <Text style={[styles.formLabel, { color: theme.text }]}>
-                    Edad
-                  </Text>
+                  <Text style={[styles.formLabel, { color: theme.text }]}>Edad</Text>
                   <TextInput
                     style={[
                       styles.formInput,
@@ -765,9 +667,7 @@ export default function DetalleEquipoScreen() {
                 </View>
 
                 <View style={[styles.formGroup, { flex: 1 }]}>
-                  <Text style={[styles.formLabel, { color: theme.text }]}>
-                    Estatura
-                  </Text>
+                  <Text style={[styles.formLabel, { color: theme.text }]}>Estatura</Text>
                   <TextInput
                     style={[
                       styles.formInput,
@@ -787,9 +687,7 @@ export default function DetalleEquipoScreen() {
                 </View>
 
                 <View style={[styles.formGroup, { flex: 1 }]}>
-                  <Text style={[styles.formLabel, { color: theme.text }]}>
-                    Peso
-                  </Text>
+                  <Text style={[styles.formLabel, { color: theme.text }]}>Peso</Text>
                   <TextInput
                     style={[
                       styles.formInput,
@@ -835,12 +733,7 @@ export default function DetalleEquipoScreen() {
                 {guardando ? (
                   <ActivityIndicator size="small" color={theme.primaryText} />
                 ) : (
-                  <Text
-                    style={[
-                      styles.confirmButtonText,
-                      { color: theme.primaryText },
-                    ]}
-                  >
+                  <Text style={[styles.confirmButtonText, { color: theme.primaryText }]}>
                     {jugadorEnEdicion ? "Actualizar ficha" : "Guardar atleta"}
                   </Text>
                 )}
