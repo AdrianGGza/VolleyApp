@@ -6,7 +6,7 @@ Si este archivo contradice el código o la base, la verdad es el código y la ba
 
 ## Estado
 
-Ultima revision: 2026/11/09
+Ultima revision: 2026/11/11
 Fecha limite de entrega: 2026/11/23
 
 - Tablas de la base de datos (Terminado)
@@ -21,12 +21,13 @@ Fecha limite de entrega: 2026/11/23
 - `ejercicios` como catálogo híbrido: Los entrenadores pueden elegir entre una lista de ejercicios pero también pueden crear ejercicios personalizados.
 - Rutas protegidas y Splash: `_layout.tsx` raíz unificado. Mientras `sesion === undefined` solo se muestra el splash nativo. Si `getSession()` inicial falla por red o almacenamiento, se degrada a `null` (login) por simplicidad para no congelar el splash ni requerir vistas intermedias.
 - Tabs nativas: Migrado a la API estable `expo-router/native-tabs`.
+- Paleta «Court & Ball»: Amber Volt (#FFB800), Court Blue (#1D63FF), fondos oscuros #0D111A / claros #F8F9FC. Skill de diseño: `design-taste-frontend`.
 
 ## Pendientes y orden
 
 - Estas son las fases del proyecto:
   - [x] Setup del proyecto y autenticación del entrenador (Terminado)
-  - [ ] CRUD de jugadores (Siguiente fase: Equipos y Jugadores)
+  - [x] CRUD de Equipos y Jugadores (Terminado): Dashboard de equipos con crear/eliminar, detalle de equipo con plantilla de jugadores (crear/editar/eliminar), selector de posiciones, métricas físicas. Corrección de schema: `estatura_jugador` y `peso_jugador` cambiados a `NUMERIC(5,2)` en Supabase.
   - [ ] Rutinas y ejercicios
   - [ ] Calendarización de rutinas por día
   - [ ] Pantallas de captura de datos de sesión (RPE, saltos, bienestar, pruebas físicas)

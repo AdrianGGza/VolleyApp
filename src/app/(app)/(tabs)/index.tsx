@@ -6,6 +6,7 @@ import {
   obtenerEquipos,
   type Equipo,
 } from "@/services/equipos.services";
+import { useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -26,6 +27,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const theme = useTheme();
+  const router = useRouter();
 
   const [equipos, setEquipos] = useState<Equipo[]>([]);
   const [cargando, setCargando] = useState(true);
@@ -239,15 +241,20 @@ export default function HomeScreen() {
           /* Cuadrícula / Lista de Equipos */
           <View style={styles.teamsList}>
             {equipos.map((equipo) => (
-              <View
+              <Pressable
                 key={equipo.id_equipo}
-                style={[
+                onPress={() => router.push(`/equipo/${equipo.id_equipo}` as any)}
+                style={({ pressed }) => [
                   styles.teamCard,
                   {
                     backgroundColor: theme.card,
                     borderColor: theme.border,
+                    opacity: pressed ? 0.92 : 1,
+                    transform: [{ scale: pressed ? 0.99 : 1 }],
                   },
                 ]}
+                accessibilityRole="button"
+                accessibilityLabel={`Ver plantilla del equipo ${equipo.nombre_equipo}`}
               >
                 <View style={styles.teamCardTop}>
                   <View style={styles.teamBadgeContainer}>
@@ -285,7 +292,10 @@ export default function HomeScreen() {
                   </View>
 
                   <Pressable
-                    onPress={() => confirmarEliminar(equipo)}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      confirmarEliminar(equipo);
+                    }}
                     style={({ pressed }) => [
                       styles.deleteButton,
                       { opacity: pressed ? 0.5 : 1 },
@@ -328,7 +338,7 @@ export default function HomeScreen() {
                         { color: theme.textSecondary },
                       ]}
                     >
-                      Plantilla activa
+                      Ver plantilla de jugadores
                     </Text>
                   </View>
 
@@ -344,7 +354,7 @@ export default function HomeScreen() {
                     />
                   </View>
                 </View>
-              </View>
+              </Pressable>
             ))}
           </View>
         )}
