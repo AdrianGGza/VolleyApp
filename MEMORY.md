@@ -28,7 +28,7 @@ Fecha limite de entrega: 2026/11/23
 - Estas son las fases del proyecto:
   - [x] Setup del proyecto y autenticación del entrenador (Terminado)
   - [x] CRUD de Equipos y Jugadores (Terminado): Dashboard de equipos con crear/eliminar, detalle de equipo con plantilla de jugadores (crear/editar/eliminar), selector de posiciones, métricas físicas. Corrección de schema: `estatura_jugador` y `peso_jugador` cambiados a `NUMERIC(5,2)` en Supabase.
-  - [ ] Rutinas y ejercicios
+  - [x] Rutinas y ejercicios (Fase 3, excepto 1D opcional): servicios 1A/1B/1C ya existían; tab "Rutinas" nuevo en `src/app/(app)/(tabs)/rutinas.tsx` (listado, crear/eliminar, vacío, pull-to-refresh, modal creación); `app-tabs.tsx` tercer tab agregado; `_layout.tsx` ruta `rutina/[id]` registrada; detalle `src/app/(app)/rutina/[id].tsx` con editar/eliminar rutina, lista ejercicios asignados (nombre, categoría, badge Global/Personal, series×repeticiones), editar/quitar ejercicio, agregar ejercicio con buscador; Opción A: crear ejercicio personalizado dentro del modal de agregar. 1D (rutinas-posicion) pospuesto para pulido.
   - [ ] Calendarización de rutinas por día
   - [ ] Pantallas de captura de datos de sesión (RPE, saltos, bienestar, pruebas físicas)
   - [ ] Pulido, documentación y entrega
