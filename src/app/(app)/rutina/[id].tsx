@@ -295,7 +295,9 @@ export default function DetalleRutinaScreen() {
       setEjerciciosDisponibles((prev) => [nuevo, ...prev]);
       setNombreNuevoEjercicio("");
       setCategoriaNuevoEjercicio("");
+      setFiltroBusqueda("");
       setModalCrearEjercicioVisible(false);
+      setModalAgregarVisible(true);
     } catch {
       setErrorNuevoEjercicio(
         "No se pudo crear el ejercicio personalizado. Intenta nuevamente.",
@@ -1160,6 +1162,7 @@ export default function DetalleRutinaScreen() {
 
             <Pressable
               onPress={() => {
+                setModalAgregarVisible(false);
                 setNombreNuevoEjercicio("");
                 setCategoriaNuevoEjercicio("");
                 setErrorNuevoEjercicio(null);
@@ -1226,7 +1229,10 @@ export default function DetalleRutinaScreen() {
         transparent
         animationType="slide"
         onRequestClose={() => {
-          if (!guardandoNuevoEjercicio) setModalCrearEjercicioVisible(false);
+          if (!guardandoNuevoEjercicio) {
+            setModalCrearEjercicioVisible(false);
+            setModalAgregarVisible(true);
+          }
         }}
       >
         <KeyboardAvoidingView
@@ -1332,7 +1338,10 @@ export default function DetalleRutinaScreen() {
 
             <View style={styles.modalActions}>
               <Pressable
-                onPress={() => setModalCrearEjercicioVisible(false)}
+                onPress={() => {
+                  setModalCrearEjercicioVisible(false);
+                  setModalAgregarVisible(true);
+                }}
                 disabled={guardandoNuevoEjercicio}
                 style={[styles.cancelButton, { borderColor: theme.border }]}
               >
