@@ -555,6 +555,33 @@ export default function DetalleRutinaScreen() {
               </Text>
             </Pressable>
 
+            {/* Botón Biblioteca de ejercicios */}
+            <Pressable
+              onPress={() => router.push(`/ejercicios?idRutina=${idRutina}` as any)}
+              style={({ pressed }) => [
+                styles.primaryButton,
+                {
+                  backgroundColor: theme.primary,
+                  opacity: pressed ? 0.85 : 1,
+                },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Buscar ejercicios en la biblioteca"
+            >
+              <SymbolView
+                name={{
+                  ios: "magnifyingglass",
+                  android: "search",
+                  web: "search",
+                }}
+                size={18}
+                tintColor={theme.primaryText}
+              />
+              <Text style={[styles.primaryButtonText, { color: theme.primaryText }]}>
+                Biblioteca
+              </Text>
+            </Pressable>
+
             {/* Lista de ejercicios o estado vacío */}
             {ejercicios.length === 0 ? (
               <View
