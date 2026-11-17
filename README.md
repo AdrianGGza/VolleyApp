@@ -1,63 +1,67 @@
 # VolleyApp
 
-App móvil para que un entrenador de voleibol gestione a sus jugadores y sus rutinas de entrenamiento desde el celular.
+App móvil para que un entrenador de voleibol gestione a sus equipos, jugadores, rutinas y sesiones de entrenamiento desde el celular.
 
-Proyecto individual de la materia de aplicaciones móviles (Ingeniería en Tecnologías de Software, UANL FIME). **Está en desarrollo.**
+Proyecto individual de la materia de aplicaciones móviles (Ingeniería en Tecnologías de Software, UANL FIME).
 
 ## ¿Qué problema resuelve?
 
-Llevar el control de un equipo (jugadores, rutinas, sesiones y asistencia) suele terminar en hojas de cálculo y mensajes sueltos. VolleyApp centraliza esa información en un solo lugar.
+Llevar el control de un equipo (jugadores, rutinas, sesiones y datos de entrenamiento) suele terminar en hojas de cálculo y mensajes sueltos. VolleyApp centraliza esa información en un solo lugar, de uso exclusivo del entrenador: cada entrenador solo ve y modifica sus propios datos.
 
-La app es de uso exclusivo del entrenador: cada entrenador solo ve y modifica sus propios datos.
+## Funcionalidades
 
-## Funciones planeadas
-
-- Alta y baja de jugadores, con sus datos (nombre, edad, estatura, posición, etc.).
-- Gestión de equipos.
-- Creación de rutinas de entrenamiento y asignación de rutinas distintas por día, por jugador o por equipo.
-- Registro de sesiones, asistencia y bienestar del jugador.
-- Pruebas físicas y estadísticas de partidos.
+- **Equipos:** alta, edición y baja de equipos con su categoría.
+- **Jugadores:** registro de plantilla por equipo con nombre, edad, estatura, peso y posición de voleibol.
+- **Rutinas:** creación de rutinas de entrenamiento, asignación de ejercicios (globales o personales), series y repeticiones.
+- **Biblioteca de ejercicios:** búsqueda de ejercicios desde exerciseapi.dev con filtros por categoría y músculo, para agregar a una rutina.
+- **Calendario:** vista mensual de sesiones de entrenamiento, creación de sesiones por equipo y fecha, detalle por día con sesiones y rutinas asignadas por jugador.
+- **Captura de datos de sesión:** formulario por jugador con RPE (1-10), saltos, bienestar (sueño, fatiga, molestias, informativo) y pruebas físicas (agilidad, core, salto, navette).
 
 ## Tecnologías
 
-- **App:** React Native, Expo y Expo Router (navegación por archivos), TypeScript.
+- **App:** React Native, Expo SDK 57, Expo Router (navegación por archivos), TypeScript.
 - **Backend:** Supabase (PostgreSQL, Auth y Row Level Security).
-- **Desarrollo asistido por IA:** el repo incluye `AGENTS.md` y `opencode.json`, con las reglas con las que se trabaja con agentes de IA.
+- **API externa:** exerciseapi.dev (biblioteca de ejercicios).
+- **Desarrollo asistido por IA:** el repo incluye `AGENTS.md` con las reglas de trabajo.
 
 ## Base de datos
 
-Modelo relacional de 16 tablas en PostgreSQL, normalizado y con nombres en `snake_case`. Cubre:
+Modelo relacional en PostgreSQL con nombres en `snake_case`. Las tablas raíz (`entrenadores`, `equipos`, `rutinas`, `jugadores`) se relacionan con el entrenador mediante `id_entrenador`. Las tablas hijas heredan la propiedad por clave foránea.
 
-- Entrenadores, equipos, jugadores y posiciones.
-- Rutinas y ejercicios (con ejercicios globales y propios de cada entrenador).
-- Sesiones de entrenamiento, asistencia y bienestar.
-- Pruebas físicas, partidos y estadísticas de partido.
+Tablas principales:
 
-Los tipos de TypeScript se generan a partir del esquema real (`src/types/database.types.ts`), para mantener alineados la base de datos y la app.
+| Tabla | Descripción |
+|-------|-------------|
+| `entrenadores` | Usuario autenticado (dueño de los datos) |
+| `equipos` | Equipos del entrenador (`id_entrenador`) |
+| `jugadores` | Jugadores de un equipo (`id_equipo`) |
+| `posiciones` | Posiciones de voleibol (solo lectura) |
+| `rutinas` | Rutinas del entrenador (`id_entrenador`) |
+| `ejercicios` | Catálogo de ejercicios (globales o del entrenador) |
+| `rutina_ejercicios` | Ejercicios asignados a una rutina (series, repeticiones, orden) |
+| `sesiones_entrenamiento` | Sesiones creadas por día y equipo |
+| `asignaciones_rutina` | Rutina asignada a un jugador en una fecha |
+| `registro_jugador_sesion` | RPE y saltos de un jugador en una sesión |
+| `pruebas_fisicas` | Agilidad, core, salto y navette de un jugador |
+
+Los tipos de TypeScript se generan a partir del esquema real (`src/types/database.types.ts`).
 
 ## Seguridad
 
-Cada tabla raíz tiene una columna `id_entrenador` ligada al usuario de Supabase Auth. Con **Row Level Security** activo en las 16 tablas, cada entrenador solo accede a sus propios registros. El aislamiento se probó con dos entrenadores de prueba.
+Cada tabla raíz tiene una columna `id_entrenador` ligada al usuario de Supabase Auth. Con **Row Level Security (RLS)** activo, cada entrenador solo accede a sus propios registros. El aislamiento se probó con dos entrenadores de prueba.
 
-## Estado actual
+**Regla importante:** en los `INSERT` de `equipos`, `rutinas` y `ejercicios`, no se envía `id_entrenador`; la base lo asigna automáticamente con `auth.uid()`.
 
-**Listo**
+## Variables de entorno
 
-- [x] Diseño del esquema de base de datos (16 tablas)
-- [x] Políticas de RLS por entrenador, probadas con dos usuarios
-- [x] Generación de tipos de TypeScript desde el esquema
-- [x] Configuración del cliente de Supabase en la app
+Se requiere un archivo `.env` (no se sube al repo) con las credenciales públicas de Supabase:
 
-**En desarrollo**
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anon_publica
+```
 
-- [ ] Autenticación (inicio de sesión, sesión persistente, rutas protegidas, cierre de sesión)
-- [ ] Alta y baja de jugadores
-
-**Siguientes pasos**
-
-- [ ] Gestión de equipos y rutinas
-- [ ] Registro de sesiones y asistencia
-- [ ] Análisis de los datos de entrenamiento con SQL y un dashboard en Power BI
+Solo se usan variables con prefijo `EXPO_PUBLIC_`. Nunca se hardcodea la clave `service_role`.
 
 ## Cómo correrlo
 
@@ -66,7 +70,35 @@ npm install
 npx expo start
 ```
 
-Necesitas un proyecto de Supabase propio y un archivo `.env` con la URL y la clave pública (anon) del proyecto.
+Comandos útiles:
+
+```bash
+npx tsc --noEmit          # Verifica tipos de TypeScript
+npx expo start            # Inicia el servidor de Expo
+```
+
+## Guía de uso para el entrenador
+
+### 1. Crear un equipo
+Desde la pestaña **Equipos**, toca "Crear primer equipo" o el botón "+ Nuevo". Ingresa el nombre y la categoría (opcional).
+
+### 2. Registrar jugadores
+Entra al detalle de un equipo y toca "Añadir primer jugador" o "+ Añadir". Completa nombre, posición, edad, estatura y peso.
+
+### 3. Crear una rutina
+Desde la pestaña **Rutinas**, toca "Crear primera rutina" o "+ Nueva". Ingresa nombre, descripción y categoría. Luego entra a la rutina y usa "Agregar ejercicio" para buscar en la biblioteca o crear uno personalizado, definiendo series, repeticiones y orden.
+
+### 4. Crear una sesión de entrenamiento
+Desde la pestaña **Rutinas**, toca "Calendario". Luego toca "+ Nueva sesión", selecciona el equipo, la fecha y la duración (opcional).
+
+### 5. Capturar datos de la sesión
+En el calendario, selecciona un día con sesiones y toca "Capturar datos" en la sesión deseada. Para cada jugador ingresa:
+- **RPE:** esfuerzo percibido de 1 a 10.
+- **Saltos:** cantidad de saltos (número positivo).
+- **Pruebas físicas:** agilidad, core, salto y navette (números positivos).
+- **Bienestar:** sueño, fatiga y molestias se muestran como referencia (no se guardan en la base de datos).
+
+Toca "OK" al finalizar. Los datos se guardan y vuelves al calendario automáticamente.
 
 ## Autor
 

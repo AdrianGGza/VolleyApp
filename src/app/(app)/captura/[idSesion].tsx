@@ -164,9 +164,54 @@ export default function CapturaSesionScreen() {
   const handleGuardar = async () => {
     if (!sesion?.id_sesion) return;
 
+    // Validar campos de todos los jugadores antes de guardar
+    const erroresValidacion: string[] = [];
+    for (const jugador of jugadores) {
+      const idJugador = jugador.id_jugador!;
+      const formulario = formularios.get(idJugador);
+      if (!formulario) continue;
+
+      const rpeNum = formulario.rpe ? parseInt(formulario.rpe, 10) : null;
+      if (rpeNum !== null && (rpeNum < 1 || rpeNum > 10)) {
+        erroresValidacion.push(
+          `${jugador.nombre_jugador}: RPE debe estar entre 1 y 10.`,
+        );
+      }
+
+      const saltosNum = formulario.saltos
+        ? parseInt(formulario.saltos, 10)
+        : null;
+      if (saltosNum !== null && saltosNum < 0) {
+        erroresValidacion.push(
+          `${jugador.nombre_jugador}: saltos debe ser un número positivo.`,
+        );
+      }
+
+      for (const [campo, valor] of Object.entries({
+        agilidad: formulario.agilidad,
+        core: formulario.core,
+        salto: formulario.salto,
+        navette: formulario.navette,
+      })) {
+        if (valor !== "" && parseInt(valor, 10) < 0) {
+          erroresValidacion.push(
+            `${jugador.nombre_jugador}: ${campo} debe ser un número positivo.`,
+          );
+        }
+      }
+    }
+
+    if (erroresValidacion.length > 0) {
+      Alert.alert("Error de validación", erroresValidacion.join("\n"), [
+        { text: "OK" },
+      ]);
+      return;
+    }
+
     setGuardando(true);
     setError(null);
     try {
+      const erroresGuardado: string[] = [];
       for (const jugador of jugadores) {
         const idJugador = jugador.id_jugador!;
         const formulario = formularios.get(idJugador);
@@ -182,26 +227,31 @@ export default function CapturaSesionScreen() {
           (r) => r.id_jugador === idJugador,
         );
 
-        if (registroExistente) {
-          // Actualizar registro existente
-          await supabase
-            .from("registro_jugador_sesion")
-            .update({
-              rpe_registro: rpeNum,
-              saltos_registro: saltosNum,
-            })
-            .eq("id_jugador", idJugador)
-            .eq("id_sesion", sesion.id_sesion);
-        } else {
-          // Crear nuevo registro
-          await supabase.from("registro_jugador_sesion").insert([
-            {
-              id_jugador: idJugador,
-              id_sesion: sesion.id_sesion,
-              rpe_registro: rpeNum,
-              saltos_registro: saltosNum,
-            },
-          ]);
+        try {
+          if (registroExistente) {
+            // Actualizar registro existente
+            await supabase
+              .from("registro_jugador_sesion")
+              .update({
+                rpe_registro: rpeNum,
+                saltos_registro: saltosNum,
+              })
+              .eq("id_jugador", idJugador)
+              .eq("id_sesion", sesion.id_sesion);
+          } else {
+            // Crear nuevo registro
+            await supabase.from("registro_jugador_sesion").insert([
+              {
+                id_jugador: idJugador,
+                id_sesion: sesion.id_sesion,
+                rpe_registro: rpeNum,
+                saltos_registro: saltosNum,
+              },
+            ]);
+          }
+        } catch {
+          erroresGuardado.push(jugador.nombre_jugador ?? "Jugador");
+          continue;
         }
 
         // Guardar pruebas físicas
@@ -223,24 +273,37 @@ export default function CapturaSesionScreen() {
         );
         const pruebaExistente = pruebasExistentes[0] ?? null;
 
-        if (pruebaExistente) {
-          await actualizarPruebaFisica(pruebaExistente.id_prueba, {
-            agilidad_pruebas: agilidadNum,
-            core_pruebas: coreNum,
-            salto_pruebas: saltoNum,
-            navette_pruebas: navetteNum,
-            fecha_pruebas: sesion.fecha_sesion ?? undefined,
-          });
-        } else {
-          await registrarPruebaFisica({
-            id_jugador: idJugador,
-            agilidad_pruebas: agilidadNum,
-            core_pruebas: coreNum,
-            salto_pruebas: saltoNum,
-            navette_pruebas: navetteNum,
-            fecha_pruebas: sesion.fecha_sesion ?? undefined,
-          });
+        try {
+          if (pruebaExistente) {
+            await actualizarPruebaFisica(pruebaExistente.id_prueba, {
+              agilidad_pruebas: agilidadNum,
+              core_pruebas: coreNum,
+              salto_pruebas: saltoNum,
+              navette_pruebas: navetteNum,
+              fecha_pruebas: sesion.fecha_sesion ?? undefined,
+            });
+          } else {
+            await registrarPruebaFisica({
+              id_jugador: idJugador,
+              agilidad_pruebas: agilidadNum,
+              core_pruebas: coreNum,
+              salto_pruebas: saltoNum,
+              navette_pruebas: navetteNum,
+              fecha_pruebas: sesion.fecha_sesion ?? undefined,
+            });
+          }
+        } catch {
+          erroresGuardado.push(jugador.nombre_jugador ?? "Jugador");
         }
+      }
+
+      if (erroresGuardado.length > 0) {
+        setError(
+          `No se pudieron guardar los datos de: ${erroresGuardado.join(
+            ", ",
+          )}. Intenta nuevamente.`,
+        );
+        return;
       }
 
       Alert.alert(
@@ -249,7 +312,7 @@ export default function CapturaSesionScreen() {
         [
           {
             text: "OK",
-            onPress: () => router.back(),
+            onPress: () => router.replace(`/calendario`),
           },
         ],
       );
