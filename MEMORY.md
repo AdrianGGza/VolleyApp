@@ -41,3 +41,35 @@ Fecha limite de entrega: 2026/11/23
 3. Verificar aislamiento RLS: el entrenador A no ve equipos, jugadores, rutinas ni sesiones del entrenador B y viceversa.
 4. Verificar que cada entrenador solo puede editar/eliminar sus propios registros.
 5. Verificar que las capturas de sesión de cada entrenador quedan asociadas a su propio id_entrenador vía auth.uid().
+
+## Auditoría de seguridad (completado 2026/11/17)
+
+Se ejecutó una auditoría completa (skill security-audit, opción B) con flujo de seis fases. Los artefactos de la auditoría se encuentran en `C:\Users\vaio\security-audit-skill\VolleyApp\run-1/`: `run-metadata.json`, `architecture.md`, `coverage-ledger.json`, `findings.json`, `REPORT.md`, `FINDINGS-DETAIL.md`, `NEEDS-VALIDATION.md`.
+
+### Hallazgos confirmados
+
+| Severidad | Fingerprint | Título |
+|-----------|-------------|--------|
+| informational | volleyapp.env-local-real-credentials | Valores reales de credenciales en .env.local |
+| informational | volleyapp.env-var-name-inconsistency | Inconsistencia de nombre de variable de entorno |
+| medium | volleyapp.obtenerTodasPruebasFisicas-no-filtro-cliente | obtenerTodasPruebasFisicas() sin filtro de cliente |
+
+### Necesita validación (no confirmado)
+
+| Fingerprint | Título | Bloqueo |
+|-------------|--------|---------|
+| volleyapp.falta-validacion-cliente-servicios | Falta de validación de entrada en servicios de Supabase | No se puede ejecutar Supabase localmente para verificar validación de BD. |
+
+### Controles de seguridad verificados (positivo)
+
+- No hardcodeo de `service_role` en ningún archivo.
+- Solo variables `EXPO_PUBLIC_*` para credenciales cliente.
+- `id_entrenador` no enviado en INSERT; se asigna con `auth.uid()`.
+- `detectSessionInUrl: false` en `src/services/supabase.ts`.
+- Validación de RPE (1-10) y campos numéricos positivos en `captura/[idSesion].tsx`.
+- Tabla `posiciones` solo lectura sin INSERT/UPDATE/DELETE en la app.
+
+### Limitación documentada
+
+Los validadores `validate-coverage-ledger.cjs` y `validate-findings.cjs` requieren constantes POSIX (`O_NOFOLLOW`, `O_NONBLOCK`) no disponibles en Windows. La validación estructural automatizada no se ejecutó; los hallazgos se basan en revisión de fuente estática.
+
