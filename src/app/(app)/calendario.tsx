@@ -24,6 +24,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CalendarioScreen() {
   const theme = useTheme();
+  const styles = createStyles(theme);
   const router = useRouter();
 
   const [sesiones, setSesiones] = useState<{
@@ -400,6 +401,16 @@ export default function CalendarioScreen() {
                           : "Sin duración especificada"}
                       </Text>
                     </View>
+                    <Pressable
+                      onPress={() =>
+                        router.push(`/captura/${sesion.id_sesion}` as any)
+                      }
+                      style={styles.capturaButton}
+                    >
+                      <Text style={styles.capturaButtonText}>
+                        Capturar datos
+                      </Text>
+                    </Pressable>
                   </View>
                 ))
               )}
@@ -459,8 +470,8 @@ export default function CalendarioScreen() {
             style={[
               styles.modalCard,
               {
-                backgroundColor: "#FFFFFF",
-                borderColor: "#E2E6EE",
+                backgroundColor: theme.card,
+                borderColor: theme.border,
               },
             ]}
           >
@@ -515,8 +526,8 @@ export default function CalendarioScreen() {
                     style={[
                       styles.equipoChip,
                       idEquipoSeleccionado === equipo.id_equipo && {
-                        backgroundColor: "#FFB800",
-                        borderColor: "#FFB800",
+                        backgroundColor: theme.primary,
+                        borderColor: theme.primary,
                       },
                     ]}
                   >
@@ -546,9 +557,9 @@ export default function CalendarioScreen() {
                 style={[
                   styles.formInput,
                   {
-                    color: "#0D111A",
-                    backgroundColor: "#EDF1F7",
-                    borderColor: "#E2E6EE",
+                    color: theme.text,
+                    backgroundColor: theme.backgroundElement,
+                    borderColor: theme.border,
                   },
                 ]}
                 placeholder="YYYY-MM-DD"
@@ -567,9 +578,9 @@ export default function CalendarioScreen() {
                 style={[
                   styles.formInput,
                   {
-                    color: "#0D111A",
-                    backgroundColor: "#EDF1F7",
-                    borderColor: "#E2E6EE",
+                    color: theme.text,
+                    backgroundColor: theme.backgroundElement,
+                    borderColor: theme.border,
                   },
                 ]}
                 placeholder="90"
@@ -598,7 +609,7 @@ export default function CalendarioScreen() {
                 style={[
                   styles.confirmButton,
                   {
-                    backgroundColor: "#FFB800",
+                    backgroundColor: theme.primary,
                     opacity: guardando ? 0.6 : 1,
                   },
                 ]}
@@ -619,7 +630,8 @@ export default function CalendarioScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: typeof Colors.light | typeof Colors.dark) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
   },
@@ -663,7 +675,7 @@ const styles = StyleSheet.create({
   navButton: {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: "#EDF1F7",
+    backgroundColor: theme.backgroundElement,
   },
   primaryButton: {
     flexDirection: "row",
@@ -672,7 +684,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 24,
-    backgroundColor: "#FFB800",
+    backgroundColor: theme.primary,
   },
   primaryButtonText: {
     fontSize: 15,
@@ -705,7 +717,7 @@ const styles = StyleSheet.create({
   diaSemanaText: {
     fontSize: 12,
     fontWeight: "700",
-    color: "#64748B",
+    color: theme.textSecondary,
     textAlign: "center",
     width: "14.28%",
     marginBottom: 6,
@@ -717,15 +729,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   diaConSesion: {
-    backgroundColor: "rgba(29, 99, 255, 0.1)",
+    backgroundColor: theme.primary,
     borderRadius: 12,
   },
   diaSeleccionado: {
-    backgroundColor: "#FFB800",
+    backgroundColor: theme.primary,
   },
   diaHoy: {
     borderWidth: 2,
-    borderColor: "#FFB800",
+    borderColor: theme.primary,
     borderRadius: 12,
   },
   diaNumero: {
@@ -739,14 +751,14 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#FFB800",
+    backgroundColor: theme.primary,
   },
   detalleDiaContainer: {
     marginTop: Spacing.four,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.card,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#E2E6EE",
+    borderColor: theme.border,
     padding: Spacing.four,
   },
   detalleDiaHeader: {
@@ -758,7 +770,7 @@ const styles = StyleSheet.create({
   detalleDiaTitulo: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#0D111A",
+    color: theme.text,
   },
   cerrarDetalle: {
     padding: 6,
@@ -781,7 +793,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
     borderRadius: 12,
-    backgroundColor: "#EDF1F7",
+    backgroundColor: theme.backgroundElement,
     marginBottom: 8,
   },
   sesionInfo: {
@@ -790,11 +802,22 @@ const styles = StyleSheet.create({
   sesionTitulo: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#0D111A",
+    color: theme.text,
   },
   sesionSubtitulo: {
     fontSize: 13,
-    color: "#64748B",
+    color: theme.textSecondary,
+  },
+  capturaButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: theme.accent,
+  },
+  capturaButtonText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: theme.primaryText,
   },
   asignacionCard: {
     flexDirection: "row",
@@ -802,10 +825,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
     borderRadius: 12,
-    backgroundColor: "#EDF1F7",
+    backgroundColor: theme.backgroundElement,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: "#E2E6EE",
+    borderColor: theme.border,
   },
   asignacionInfo: {
     flex: 1,
@@ -813,11 +836,11 @@ const styles = StyleSheet.create({
   asignacionNombre: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#0D111A",
+    color: theme.text,
   },
   asignacionRutina: {
     fontSize: 13,
-    color: "#64748B",
+    color: theme.textSecondary,
   },
   modalOverlay: {
     flex: 1,
@@ -892,7 +915,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#E2E6EE",
+    borderColor: theme.border,
   },
   equipoChipText: {
     fontSize: 13,

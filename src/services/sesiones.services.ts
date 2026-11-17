@@ -25,11 +25,27 @@ export type NuevoRegistroJugadorSesion = Omit<
 export async function obtenerSesiones(): Promise<Sesion[]> {
   const { data, error } = await supabase
     .from("sesiones_entrenamiento")
-    .select("*")
+    .select("*, equipos(nombre_equipo)")
     .order("fecha_sesion", { ascending: true });
 
   if (error) throw error;
   return data ?? [];
+}
+
+/**
+ * Obtiene una sesión de entrenamiento por su ID.
+ */
+export async function obtenerSesionPorId(
+  idSesion: number,
+): Promise<Sesion | null> {
+  const { data, error } = await supabase
+    .from("sesiones_entrenamiento")
+    .select("*, equipos(nombre_equipo)")
+    .eq("id_sesion", idSesion)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
 }
 
 /**

@@ -9,6 +9,7 @@ export default function AppLayout() {
       <Stack.Screen name="ejercicios" />
       <Stack.Screen name="ejercicio/[id]" />
       <Stack.Screen name="calendario" />
+      <Stack.Screen name="captura/[idSesion]" />
     </Stack>
   );
 }
