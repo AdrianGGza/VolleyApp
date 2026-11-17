@@ -174,6 +174,32 @@ export default function RutinasScreen() {
               Nueva
             </Text>
           </Pressable>
+
+          <Pressable
+            onPress={() => router.push("/calendario")}
+            style={({ pressed }) => [
+              styles.primaryButton,
+              {
+                backgroundColor: theme.primary,
+                opacity: pressed ? 0.85 : 1,
+              },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Ver calendario de entrenamiento"
+          >
+            <SymbolView
+              name={{
+                ios: "calendar",
+                android: "calendar_today",
+                web: "calendar_today",
+              }}
+              size={18}
+              tintColor={theme.primaryText}
+            />
+            <Text style={[styles.primaryButtonText, { color: theme.primaryText }]}>
+              Calendario
+            </Text>
+          </Pressable>
         </View>
 
         {/* Estado de carga */}

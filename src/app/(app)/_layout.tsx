@@ -8,6 +8,7 @@ export default function AppLayout() {
       <Stack.Screen name="rutina/[id]" />
       <Stack.Screen name="ejercicios" />
       <Stack.Screen name="ejercicio/[id]" />
+      <Stack.Screen name="calendario" />
     </Stack>
   );
 }
