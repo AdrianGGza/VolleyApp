@@ -17,6 +17,12 @@ import {
   actualizarPruebaFisica,
   type PruebaFisica,
 } from "@/services/pruebas-fisicas.services";
+import {
+  obtenerBienestarPorJugador,
+  registrarBienestar,
+  actualizarBienestar,
+  type Bienestar,
+} from "@/services/bienestar.services";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useState } from "react";
@@ -77,12 +83,13 @@ export default function CapturaSesionScreen() {
     jugador: JugadorConPosicion,
     registroExistente: RegistroJugadorSesion | null,
     pruebaExistente: PruebaFisica | null,
+    bienestarExistente: Bienestar | null,
   ): RegistroEstado => ({
     rpe: registroExistente?.rpe_registro?.toString() ?? "",
     saltos: registroExistente?.saltos_registro?.toString() ?? "",
-    sueno: "", // No hay tabla de bienestar; campo informativo
-    fatiga: "", // No hay tabla de bienestar; campo informativo
-    molestias: "", // No hay tabla de bienestar; campo informativo
+    sueno: bienestarExistente?.sueno_bienestar?.toString() ?? "",
+    fatiga: bienestarExistente?.estres_bienestar?.toString() ?? "",
+    molestias: bienestarExistente?.doms_bienestar?.toString() ?? "",
     agilidad: pruebaExistente?.agilidad_pruebas?.toString() ?? "",
     core: pruebaExistente?.core_pruebas?.toString() ?? "",
     salto: pruebaExistente?.salto_pruebas?.toString() ?? "",
@@ -113,10 +120,21 @@ export default function CapturaSesionScreen() {
           jugador.id_jugador!,
         );
         const pruebaExistente = pruebasJugador[0] ?? null;
+        const bienestarJugador = await obtenerBienestarPorJugador(
+          jugador.id_jugador!,
+        );
+        const bienestarExistente = bienestarJugador.find(
+          (b) => b.id_sesion === sesion?.id_sesion,
+        ) ?? null;
 
         mapFormularios.set(
           jugador.id_jugador!,
-          inicializarFormulario(jugador, registroExistente ?? null, pruebaExistente),
+          inicializarFormulario(
+            jugador,
+            registroExistente ?? null,
+            pruebaExistente,
+            bienestarExistente,
+          ),
         );
       }
       setFormularios(mapFormularios);
@@ -199,6 +217,21 @@ export default function CapturaSesionScreen() {
           );
         }
       }
+
+      for (const [campo, valor] of Object.entries({
+        sueno: formulario.sueno,
+        fatiga: formulario.fatiga,
+        molestias: formulario.molestias,
+      })) {
+        if (valor !== "") {
+          const num = parseInt(valor, 10);
+          if (Number.isNaN(num) || num < 1 || num > 5) {
+            erroresValidacion.push(
+              `${jugador.nombre_jugador}: ${campo} debe estar entre 1 y 5.`,
+            );
+          }
+        }
+      }
     }
 
     if (erroresValidacion.length > 0) {
@@ -211,7 +244,8 @@ export default function CapturaSesionScreen() {
     setGuardando(true);
     setError(null);
     try {
-      const erroresGuardado: string[] = [];
+      const erroresCriticos: string[] = [];
+      const erroresBienestar: string[] = [];
       for (const jugador of jugadores) {
         const idJugador = jugador.id_jugador!;
         const formulario = formularios.get(idJugador);
@@ -227,6 +261,7 @@ export default function CapturaSesionScreen() {
           (r) => r.id_jugador === idJugador,
         );
 
+        let rpeSaltosOk = false;
         try {
           if (registroExistente) {
             // Actualizar registro existente
@@ -249,10 +284,13 @@ export default function CapturaSesionScreen() {
               },
             ]);
           }
+          rpeSaltosOk = true;
         } catch {
-          erroresGuardado.push(jugador.nombre_jugador ?? "Jugador");
+          erroresCriticos.push(jugador.nombre_jugador ?? "Jugador");
           continue;
         }
+
+        if (!rpeSaltosOk) continue;
 
         // Guardar pruebas físicas
         const agilidadNum = formulario.agilidad
@@ -293,15 +331,63 @@ export default function CapturaSesionScreen() {
             });
           }
         } catch {
-          erroresGuardado.push(jugador.nombre_jugador ?? "Jugador");
+          erroresCriticos.push(jugador.nombre_jugador ?? "Jugador");
+          continue;
+        }
+
+        // Guardar bienestar (sueño, fatiga, molestias) — opcional, no bloquea
+        const bienestarJugador = await obtenerBienestarPorJugador(idJugador);
+        const suenoNum = formulario.sueno
+          ? parseInt(formulario.sueno, 10)
+          : null;
+        const fatigaNum = formulario.fatiga
+          ? parseInt(formulario.fatiga, 10)
+          : null;
+        const molestiasNum = formulario.molestias
+          ? parseInt(formulario.molestias, 10)
+          : null;
+
+        const bienestarExistenteParaGuardar = bienestarJugador.find(
+          (b) => b.id_sesion === sesion.id_sesion,
+        );
+
+        try {
+          if (bienestarExistenteParaGuardar) {
+            await actualizarBienestar(bienestarExistenteParaGuardar.id_bienestar, {
+              sueno_bienestar: suenoNum,
+              estres_bienestar: fatigaNum,
+              doms_bienestar: molestiasNum,
+              fecha_bienestar: sesion.fecha_sesion ?? undefined,
+            });
+          } else {
+            await registrarBienestar({
+              id_jugador: idJugador,
+              id_sesion: sesion.id_sesion,
+              sueno_bienestar: suenoNum,
+              estres_bienestar: fatigaNum,
+              doms_bienestar: molestiasNum,
+              fecha_bienestar: sesion.fecha_sesion ?? undefined,
+            });
+          }
+        } catch {
+          erroresBienestar.push(jugador.nombre_jugador ?? "Jugador");
         }
       }
 
-      if (erroresGuardado.length > 0) {
+      if (erroresCriticos.length > 0) {
         setError(
-          `No se pudieron guardar los datos de: ${erroresGuardado.join(
+          `No se pudieron guardar los datos de: ${erroresCriticos.join(
             ", ",
           )}. Intenta nuevamente.`,
+        );
+        return;
+      }
+
+      if (erroresBienestar.length > 0) {
+        setError(
+          `Datos guardados. El bienestar no se pudo registrar para: ${erroresBienestar.join(
+            ", ",
+          )}.`,
         );
         return;
       }
@@ -424,9 +510,8 @@ export default function CapturaSesionScreen() {
             style={styles.iconoNota}
           />
           <Text style={[styles.textoNota, { color: theme.textSecondary }]}>
-            Los campos de bienestar (sueño, fatiga, molestias) requieren una
-            tabla adicional en la base de datos. Por ahora se muestran como
-            referencia pero no se guardan.
+            Los campos de bienestar (sueño, fatiga, molestias) se guardan en la
+            tabla de bienestar vinculada a esta sesión.
           </Text>
         </View>
 
